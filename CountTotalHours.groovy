@@ -6,6 +6,7 @@ def List<Node> nodes = root.getChildren()
 
 def Integer timedTasksCount = 0
 def Integer doneTasksCount = 0
+def Float doneTimeCount = 0
 
 def countTotal
 countTotal = { List<Node> nds ->
@@ -20,8 +21,9 @@ countTotal = { List<Node> nds ->
 //                def sub = n.createChild()
 //                sub.text = x
 //            }
-            if (n.getIcons().contains("button_ok")) {
+            if (n.getIcons().contains("button_ok") && n.getAt("time")) {
                 doneTasksCount += 1
+                doneTimeCount += n["time"].toFloat()
             }
         }
         if (!n.getChildren().empty) {
@@ -33,7 +35,8 @@ countTotal = { List<Node> nds ->
     return total
 }
 
-root["total"] = countTotal(nodes)
+root["totalTime"] = countTotal(nodes)
 root["tasks"] = timedTasksCount
-root["done"] = doneTasksCount
-root["done%"] = doneTasksCount / timedTasksCount * 100
+root["doneTasks"] = doneTasksCount
+root["done%"] = doneTimeCount / root["totalTime"].toFloat() * 100
+root["doneTime"] = doneTimeCount
