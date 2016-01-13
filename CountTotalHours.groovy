@@ -1,5 +1,9 @@
-
+import groovy.time.TimeCategory
 import org.freeplane.plugin.script.proxy.Proxy.Node
+import pm.*
+
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 def Node root = node
 def List<Node> nodes = root.getChildren()
@@ -7,23 +11,27 @@ def List<Node> nodes = root.getChildren()
 def Integer timedTasksCount = 0
 def Integer doneTasksCount = 0
 def Float doneTimeCount = 0
+def Float spentTimeCount = 0
 
 def countTotal
 countTotal = { List<Node> nds ->
     def Float total = 0
     for (Node n : nds) {
-        if (n.getAt("time")) {
-            total += n.getAt("time").toFloat()
+        def t = Task.getTask(n)
+        if (t) {
+            total += t.getEstimatedTime()
             timedTasksCount += 1
-//            def i = n.getIcons().iterator()
-//            while (i.hasNext()) {
-//                def x = i.next()
-//                def sub = n.createChild()
-//                sub.text = x
-//            }
-            if (n.getIcons().contains("button_ok") && n.getAt("time")) {
+
+            if (t.isDone()) {
                 doneTasksCount += 1
-                doneTimeCount += n["time"].toFloat()
+                doneTimeCount += t.getEstimatedTime()
+            }
+
+            def tt = t.getTimeTable()
+            if (tt) {
+                def Float spentTime = tt.getSpentTime()
+                t.node["spentTime"] = spentTime
+                spentTimeCount += spentTime
             }
         }
         if (!n.getChildren().empty) {
@@ -40,3 +48,4 @@ root["tasks"] = timedTasksCount
 root["doneTasks"] = doneTasksCount
 root["done%"] = doneTimeCount / root["totalTime"].toFloat() * 100
 root["doneTime"] = doneTimeCount
+root["spentTime"] = spentTimeCount
