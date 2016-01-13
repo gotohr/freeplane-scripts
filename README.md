@@ -22,5 +22,5 @@ Best to be executed on root project node.
 just slaps attribute "estimatedTime" to current node (and popups dialog to enter time!
 
 ### Toggle Task Timer
-toggles active state on task (node with estimatedTime attribute). Active state means adding specific icon to node. Crates child node timetable where script writes times. Not meant to be used directly, but if you need so - can be changed "by hand".
+toggles active state on task (node with estimatedTime attribute). Active state means adding specific icon to node. Crates child node timetable where script writes times. Timetable child node is not meant to be used directly, but if you need so - can be changed "by hand".
  
